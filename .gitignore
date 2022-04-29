@@ -6,7 +6,7 @@
 /yarn-error.log
 /yarn.lock
 /package-lock.json
-.vscode
+
 # production
 /dist
 
@@ -18,3 +18,12 @@
 /src/.umi-production
 /src/.umi-test
 /.env.local
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
