@@ -1,0 +1,67 @@
+.slide_vertical {
+  height: 100%;
+
+  .vertical_wrapper {
+    position: relative;
+    height: 100%;
+    font-size: 0;
+  }
+
+  .slide_vertical_wrapper {
+    height: 100%;
+    overflow: hidden;
+
+    .solid_page {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      font-size: .325rem;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+
+      .title {
+        font-size: .8rem;
+        color: white;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 5rem;
+        -webkit-transition: bottom .6s, color .3s;
+        transition: bottom .6s, color .3s;
+        height: 40px;
+        color: rgb(250, 231, 233);
+
+        &:hover {
+          color: red;
+        }
+      }
+    }
+  }
+
+  // 右侧按钮
+  .dots_wrapper {
+    position: absolute;
+    right: .05rem;
+    top: 50%;
+    transform: translateY(-50%);
+
+    .dot,
+    .active {
+      display: block;
+      margin: .05rem 0;
+      width: .1rem;
+      height: .1rem;
+      border-radius: 50%;
+      background-color: #eee;
+      cursor: pointer;
+    }
+
+    .active {
+      height: .25rem;
+      border-radius: .0625rem;
+      background-color: red;
+    }
+  }
+
+}

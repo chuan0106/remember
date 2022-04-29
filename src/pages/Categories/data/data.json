@@ -1,0 +1,31 @@
+[
+    {
+      "name": "英雄联盟",
+      "id": 1,
+      "color":"#D6EADF",
+      "route":"LOL",
+      "type":1,
+      "img":"https://img.crawler.qq.com/lolwebschool/0/JAutoCMS_LOLWeb_d949851d4f9b8f0437c90f4d24fe3d9d/0"
+    },
+    {
+        "name": "音乐",
+        "id": 2,
+        "color":"#DDA789",
+        "type":3,
+        "img":null
+      },  
+      {
+        "name": "视频",
+        "id": 3,
+        "color":"#C3D899",
+        "type":3,
+        "img":null
+      },  
+      {
+        "name": "羽神",
+        "id": 4,
+        "color":"#F2D4A7",
+        "type":3,
+        "img":null
+      }
+  ]
