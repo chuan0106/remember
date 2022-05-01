@@ -52,12 +52,16 @@ const listData = [
     { name: '铜锣湾扛把子', id: 4 },
     { name: '陈笑楠', id: 5 },
     { name: '嗨嗨嗨', id: 6 },
+    { name: '嗨嗨嗨', id: 7 },
+    { name: '嗨嗨嗨', id: 8 },
+    { name: '嗨嗨嗨', id: 9 },
+
 ]
 const index = () =>
 {
 
-    const [active, setActive] = useState(data[0].id)
-    const [vipName, setVipName] = useState('会员中心 '), // 后面有加了个空格的
+    const [active, setActive] = useState(data[0].id),
+        [vipName, setVipName] = useState('会员中心 '), // 后面有加了个空格的
         [placeholder, setPlaceholder] = useState(inputName[0]),  // 首次从1开始
         [randomIndex, setRandomIndex] = useState(1),  // 3秒后从1开始依次播放
         [mouseUser, setMouseUser] = useState(false),  // 用户鼠标移入移出
@@ -80,12 +84,13 @@ const index = () =>
         subscript >= inputName.length - 1 ? setRandomIndex(0) : setRandomIndex(randomIndex + 1);
         setPlaceholder(inputName[randomIndex])
     }
-    // 接收传递过来的id做判断给指定的样式
-
+    // 接收传递过来的id做判断给指定的样式 从id=7开始 样式就有点小小的不一样
     const btnStyle = (id) =>
     {
         let style = null
-        style = id === 1 ? styles.toolbar_btn_user : id === 2 ? styles.toolbar_btn_vip : id === 3 ? styles.toolbar_btn_collect : id === 4 ? styles.toolbar_btn_dynamic : id === 5 ? styles.toolbar_btn_message : id === 6 ? styles.toolbar_btn_write : null
+        style = id === 7 ? `${styles.pb_8}  ${styles.border_bottom}`
+            : id === 8 ? `${styles.pb_8} ${styles.pt_8}  ${styles.border_bottom}`
+                : id === 9 ? `${styles.pt_8}  ${styles.profile_logout}` : null
         return style
     }
     // 修改 left 选中线
@@ -161,14 +166,18 @@ const index = () =>
                                     <div className={styles.profile_bottom}>
                                         <ul className={styles.border_bottom}>
                                             {listData.map((data, index) => (
-                                                <li key={index}>
+                                                <li className={btnStyle(data.id)} key={index}>
                                                     <a key={index} href="">
-                                                        <i></i>
+                                                        <i style={{
+                                                            backgroundPositionX: 0,
+                                                            // 循环精灵图
+                                                            backgroundPositionY: 0 - index * 16 + 'px'
+                                                        }}></i>
                                                         {data.name}
                                                     </a>
                                                 </li>
                                             ))}
-                                            <li className={`${styles.pb_8}  ${styles.border_bottom}`}>
+                                            {/* <li className={`${styles.pb_8}  ${styles.border_bottom}`}>
                                                 <a href="">
                                                     <i></i>
                                                     哈哈哈
@@ -185,7 +194,7 @@ const index = () =>
                                                     <i></i>
                                                     哈哈哈
                                                 </a>
-                                            </li>
+                                            </li> */}
                                         </ul>
                                     </div>
                                 </div>

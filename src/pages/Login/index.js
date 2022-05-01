@@ -2,14 +2,16 @@ import { useState, Fragment } from 'react'
 import { message } from 'antd';
 import styles from './style.less'
 import QrCode from '@/component/QrCode'
+import { connect } from 'dva';
 const contentStyleShow = {
     transform: 'translateX(80%)'
 }
 const contentStyleHide = {
     transform: 'translateX(0%)'
 }
-const index = ({ history }) =>
+const index = ({ history, globalSecret, dispatch }) =>
 {
+
     const [isShow, setIsShow] = useState(false)  // 控制登陆、注册
     const [showHide, SetShowHide] = useState(true)  // 控制登陆、注册显示隐藏
     const [isPassword, setIsPassword] = useState(false)  // 是否显示密码
@@ -63,7 +65,7 @@ const index = ({ history }) =>
         }
     }
     // 登陆
-    const Processing = (e) =>
+    const Processing = async (e) =>
     {
         // 阻止默认事件
         e.preventDefault();
@@ -72,11 +74,13 @@ const index = ({ history }) =>
         const { username, password } = landed
         if (username === name && password === word)
         {
-            message.success('登陆成功')
+            await message.success('登陆成功')
+            // 增加进入 的权限
+            await dispatch({ type: 'global/secretRes', payload: true });
             setTimeout(() =>
             {
                 history.push('/categories')
-            }, 3000)
+            }, 1000)
         } else
         {
             message.error('账号或密码错误')
@@ -179,5 +183,10 @@ const index = ({ history }) =>
     )
 }
 
-export default index
-
+function mapStateToProps ({ global })
+{
+    return {
+        globalSecret: global.secret
+    };
+}
+export default connect(mapStateToProps)(index);

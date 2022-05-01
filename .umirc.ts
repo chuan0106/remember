@@ -4,16 +4,35 @@ export default defineConfig({
         type: 'none',
     },
     routes: [
-        { path: '/', redirect: '/login' },  // 首页重定向
+        { path: '/', redirect: '/main' },  // 首页重定向
+        // 入口页面
+        {
+            exact: true,
+            path: '/main',
+            component: '@/layouts/Common',
+            routes: [
+                { path: '/main', name: '分类', component: '@/pages/Main' },
+            ],
+        },
         {
             exact: true,
             path: '/lol',
-            name: '英雄联盟商店',
-            component: '@/layouts/LOL',
+            component: '@/layouts/Common',
+            // 路由权限
+            wrappers: ['@/wrappers/auth',],
             routes: [
-                { path: '/lol', name: '你的商店-英雄联盟官方网站-小川游戏', component: '@/pages/LOL' },
+                { path: '/lol', name: '入口', component: '@/pages/LOL' },
             ],
         },
+        // {
+        //     exact: true,
+        //     path: '/lol',
+        //     name: '英雄联盟商店',
+        //     component: '@/layouts/LOL',
+        //     routes: [
+        //         { path: '/lol', name: '你的商店-英雄联盟官方网站-小川游戏', component: '@/pages/LOL' },
+        //     ],
+        // },
         {
             exact: true,
             path: '/login',
@@ -37,6 +56,7 @@ export default defineConfig({
                 { path: '/Toolbar', name: '分类', component: '@/component/Toolbar' },
             ],
         },
+        // 404！
         {
             component: '@/pages/404',
 
@@ -53,16 +73,12 @@ export default defineConfig({
     title: false,  // 如果需要自行通过 react-helmet 等方式渲染 title，配 title: false 可禁用内置的 title 渲染机制
 
     chainWebpack(config, { webpack }) {
-        console.log([
-            '😀 😁 😂 🤣 😃',
-            '😄 😅 😆 😉 😊',
-            '😫 😴 😌 😛 😜',
-            '👆🏻 😒 😓 😔 👇🏻']);
-        config.merge({
-            plugins: [
-                new webpack.BannerPlugin('版权归属臧小川所有')
-            ],
-        })
-        config.plugins.get('版权归属臧小川所有')
+        console.log('😀 😁 😂 🤣 😃  😄 😅 😆 😉 😊  😫 😴 😌 😛 😜 😒 😓 😔');
+        // 还没配置成功
+        // config.merge({
+        //     plugins: [
+        //         new webpack.BannerPlugin('版权归属臧小川所有')
+        //     ],
+        // })
     },
 });
