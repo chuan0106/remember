@@ -1,7 +1,6 @@
 
 export default {
     namespace: 'global',
-
     state: {
         // 有否有权限
         secret: false,

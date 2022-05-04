@@ -77,10 +77,8 @@ const index = ({ history, globalSecret, dispatch }) =>
             await message.success('登陆成功')
             // 增加进入 的权限
             await dispatch({ type: 'global/secretRes', payload: true });
-            setTimeout(() =>
-            {
-                history.push('/categories')
-            }, 1000)
+            // 进入分类页面
+            await history.push('/categories')
         } else
         {
             message.error('账号或密码错误')

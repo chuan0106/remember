@@ -62,7 +62,6 @@ const index = () =>
         progressAreaRef = useRef(),  // 获取进度条内容
         cutOverRef = useRef(),  // 切换按钮
         ulTagRef = useRef(),  // 暂时没用到 ~
-        // 因为要把 li 的ref给遍历出来 所以是个数
         liAudioRef = useRef([]),  // 获取列表每一首歌的时间
         listTotalMusicTime = useRef()  // 列表总时间
 
@@ -83,7 +82,11 @@ const index = () =>
     }, [randomIndex, musicData])
 
 
-
+    const init = () =>
+    {
+        let listHtml = liAudioRef.current;
+        console.log(listHtml)
+    }
     //函数，用于加载音乐，参数为对应音乐的序号
     const initMusic = (index) =>
     {
@@ -144,7 +147,6 @@ const index = () =>
                 break;
         }
     }
-
 
     //所有音乐界面每个条目的点击事件
     const clicked = (index) =>
@@ -229,6 +231,8 @@ const index = () =>
         mainAudio.current.currentTime = (clickedOffsetX / progressWidth) * songDuration;
         //调用播放音乐的函数
         playMusic();
+        // 更改 state 重新调用 useEffect 2022 4.12
+        setPlayback(true)
     }
     //给音乐结束添加事件
     const mainAudioEnd = () =>
@@ -245,7 +249,8 @@ const index = () =>
                 break;
             // 当前为单曲循环时，重新加载当前音乐
             case "cycle":
-                initMusic(randomIndex)
+                // initMusic(randomIndex)
+                playMusic()  // 当音乐结束后 应该继续播放当前音乐 2022.4.12
                 break;
             //当前为随机播放时，随机获取下一首的序号，并播放
             case "random":
@@ -264,37 +269,47 @@ const index = () =>
     {
         moreMusicBtn()
     }
-    // 这里目前是没有用到的 先留着吧
-    const liAudioTag = () =>
-    {
-        const { current } = liAudioRef
-        //获取播放时间并转化成分和秒
 
-        for (const key in allMusic)
-        {
+    // const liAudioTag = () =>
+    // {
+    //     const { current } = liAudioRef
+    //     //获取播放时间并转化成分和秒
+    //     console.log(current, 'current');
+    //     for (let index = 0; index < current.length; index++)
+    //     {
+    //         const element = current[index];
+    //         let mainAdDuration = element?.duration;
+    //         console.log(mainAdDuration, 'mainAdDuration');
+    //         let totalMin = Math.floor(mainAdDuration / 60);
+    //         let totalSec = Math.floor(mainAdDuration % 60);
+    //         allMusic[index].totalTime = `${totalMin}:${totalSec}`;  // 这个是显示时间 奈何本人实力如此差劲
+    //     }
+    //     // for (const key in allMusic)
+    //     // {
 
-            let mainAdDuration = current.duration;
-            let totalMin = Math.floor(mainAdDuration / 60);
-            let totalSec = Math.floor(mainAdDuration % 60);
-            if (totalSec < 10)
-            {
-                //不够十秒补零
-                totalSec = `0${totalSec}`;
-            }
-            // allMusic[key].totalTime = `${totalMin}:${totalSec}`;  // 这个是显示时间 奈何本人实力如此差劲
-            allMusic[key].totalTime = `播放`;
-        }
+    //     //     let mainAdDuration = current.duration;
+    //     //     let totalMin = Math.floor(mainAdDuration / 60);
+    //     //     let totalSec = Math.floor(mainAdDuration % 60);
+    //     //     if (totalSec < 10)
+    //     //     {
+    //     //         //不够十秒补零
+    //     //         totalSec = `0${totalSec}`;
+    //     //     }
+    //     //     // allMusic[key].totalTime = `${totalMin}:${totalSec}`;  // 这个是显示时间 奈何本人实力如此差劲
+    //     //     allMusic[key].totalTime = `播放`;
+    //     //     listTotalMusicTime.current.innerText = `${totalMin}:${totalSec}`;
+    //     // }
 
-        // listTotalMusicTime.current.innerText = `${totalMin}:${totalSec}`;
+    //     // listTotalMusicTime.current.innerText = `${totalMin}:${totalSec}`;
 
-    }
+    // }
 
     const listDom = () =>
     {
         const { current } = ulTagRef
         if (current)
         {
-            // console.log(allMusic.length, 'allMusic.length');
+            console.log(allMusic.length, 'allMusic.length');
             for (let i = 0; i < allMusic.length; i++)
             {
                 //利用循环，给每一首歌生成HTML代码
@@ -351,80 +366,89 @@ const index = () =>
         ></PauseOutlined>
         return playback ? playBack : pause
     }
-    // 把所有的li的ref push进来 但好像会出现个问题 随着每次 state 更新 这个数组存的会越来越多 先记录下来 后面子看是什么问题
-    const getLiAudioRef = (listRef) =>
-    {
-        liAudioRef.current.push(listRef)
-    }
-    return (
-        <div className={styles.wrapper}>
-            <div className={styles.img_area}>
-                <img src={musicData?.img} alt="" />
-            </div>
-            <div className={styles.song_details}>
-                <p className={styles.name}>{musicData?.name}</p>
-                <p className={styles.artist}>{musicData?.artist}</p>
-            </div>
-            <div onMouseDown={progressArea} onClick={progressArea} ref={progressAreaRef} className={styles.progress_area}>
-                <div ref={progressBar} className={styles.progress_bar}>
-                    <audio src={`./audio/${musicData?.src}.mp3`} ref={mainAudio} onLoadedData={mainAudioLoad} onEnded={mainAudioEnd} onTimeUpdate={mainAudioUpDate} id="main-audio" ></audio>
-                </div>
-                <div className={styles.song_timer}>
-                    <span ref={musicCurrentTime} className={styles.current_time}>0:00</span>
-                    <span ref={totalMusicTime} className={styles.max_duration}>0:00</span>
-                </div>
-            </div>
-            <div className={styles.controls}>
-                {cutOverDom()}
-                <CaretLeftOutlined id="prev" onClick={prevBtn} className={`${styles.iconfont} ${styles.icon_shangyishou}`}
-                ></CaretLeftOutlined>
-                <div onClick={playPauseBtn} className={styles.play_pause} >
-                    {PausePlaybackDom()}
-                </div>
-                <CaretRightOutlined id="next" onClick={nextBtn} className={`${styles.iconfont} ${styles.icon_xiayishou}`} ></CaretRightOutlined>
-                <MenuFoldOutlined id="more-music" onClick={moreMusicBtn} className={` ${styles.iconfont} ${styles.icon_yinleliebiao}  `} ></MenuFoldOutlined>
-            </div>
-            <div className={` ${styles.music_list} ${moreMusicIsShow ? styles.show : null}  `}  >
-                <div className={styles.header} >
-                    <div className={styles.row} >
-                        <ZoomOutOutlined className={`${styles.iconfont} ${styles.list} ${styles.icon_yinleliebiao}`} ></ZoomOutOutlined>
-                        <span className={styles.rowTitle}>音乐列表</span>
-                    </div>
-                    <CloseOutlined id="close" style={{ width: '22px' }} onClick={closeBtn} className={`${styles.iconfont} ${styles.icon_guanbi}`} ></CloseOutlined>
-                </div>
-                <ul ref={ulTagRef}>
-                    {/* {listDom()} */}
-                    {allMusic.map((data, index) =>
-                    {
-                        let listTime = null
-                        let current = liAudioRef?.current[index]
-                        console.log(current, 'currentcurrent');
-                        let mainAdDuration = current?.duration;
-                        console.log(mainAdDuration, 'mainAdDuration');
-                        let totalMin = Math.floor(mainAdDuration / 60);
-                        let totalSec = Math.floor(mainAdDuration % 60);
-                        if (totalSec < 10)
-                        {
-                            //不够十秒补零
-                            totalSec = `0${totalSec}`;
-                        }
-                        listTime = `${totalMin}:${totalSec}`
 
-                        return (
-                            <li className={randomIndex === index ? styles.playing : null} key={index}>
-                                <div className={styles.row}>
-                                    <span>{data.name}</span>
-                                    <p>{data.artist}</p>
-                                </div>
-                                {/* <span style={randomIndex === index ? { color: '#ff74a4' } : null} onClick={() => { clicked(index) }} ref={listTotalMusicTime} className={styles.audio_duration}  >{randomIndex === index ? '正在播放...' : '播放'}</span> */}
-                                <span style={randomIndex === index ? { color: '#ff74a4' } : null} onClick={() => { clicked(index) }} ref={listTotalMusicTime} className={styles.audio_duration}  >{listTime}</span>
-                                <audio id='listAudio' onLoadedData={liAudioTag} ref={getLiAudioRef} className={`${data.src}`} src={`./${data?.src}.mp3`}></audio>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-        </div >
+    const getLiAudioRef = (dom) =>
+    {
+
+        liAudioRef.current = [...liAudioRef.current, dom]
+        // console.log(dom);
+        // liAudioRef.current.push(dom)
+        // console.log(liAudioRef, 'liAudioRef');
+        // console.log(liAudioRef.current, ' liAudioRef.current');
+        // liAudioRef.current
+        // console.log(a, 'aaaaaaaaaa');
+    }
+    console.log(liAudioRef.current, 'liAudioRef');
+    return (
+        <div className={styles.warp}>
+            <div className={styles.wrapper}>
+                <div className={styles.img_area}>
+                    <img src={musicData?.img} alt="" />
+                </div>
+                <div className={styles.song_details}>
+                    <p className={styles.name}>{musicData?.name}</p>
+                    <p className={styles.artist}>{musicData?.artist}</p>
+                </div>
+                <div onMouseDown={progressArea} onClick={progressArea} ref={progressAreaRef} className={styles.progress_area}>
+                    <div ref={progressBar} className={styles.progress_bar}>
+                        <audio src={`./${musicData?.src}.mp3`} ref={mainAudio} onLoadedData={mainAudioLoad} onEnded={mainAudioEnd} onTimeUpdate={mainAudioUpDate} id="main-audio" ></audio>
+                    </div>
+                    <div className={styles.song_timer}>
+                        <span ref={musicCurrentTime} className={styles.current_time}>0:00</span>
+                        <span ref={totalMusicTime} className={styles.max_duration}>0:00</span>
+                    </div>
+                </div>
+                <div className={styles.controls}>
+                    {cutOverDom()}
+                    <CaretLeftOutlined id="prev" onClick={prevBtn} className={`${styles.iconfont} ${styles.icon_shangyishou}`}
+                    ></CaretLeftOutlined>
+                    <div onClick={playPauseBtn} className={styles.play_pause} >
+                        {PausePlaybackDom()}
+                    </div>
+                    <CaretRightOutlined id="next" onClick={nextBtn} className={`${styles.iconfont} ${styles.icon_xiayishou}`} ></CaretRightOutlined>
+                    <MenuFoldOutlined id="more-music" onClick={moreMusicBtn} className={` ${styles.iconfont} ${styles.icon_yinleliebiao}  `} ></MenuFoldOutlined>
+                </div>
+                <div className={` ${styles.music_list} ${moreMusicIsShow ? styles.show : null}  `}  >
+                    <div className={styles.header} >
+                        <div className={styles.row} >
+                            <ZoomOutOutlined className={`${styles.iconfont} ${styles.list} ${styles.icon_yinleliebiao}`} ></ZoomOutOutlined>
+                            <span className={styles.rowTitle}>音乐列表</span>
+                        </div>
+                        <CloseOutlined id="close" style={{ width: '22px' }} onClick={closeBtn} className={`${styles.iconfont} ${styles.icon_guanbi}`} ></CloseOutlined>
+                    </div>
+                    <ul ref={ulTagRef}>
+                        {/* {listDom()} */}
+                        {allMusic.map((data, index) =>
+                        {
+                            let listTime = null
+                            let current = liAudioRef?.current[index]
+                            console.log(current, 'currentcurrent');
+                            let mainAdDuration = current?.duration;
+                            console.log(mainAdDuration, 'mainAdDuration');
+                            let totalMin = Math.floor(mainAdDuration / 60);
+                            let totalSec = Math.floor(mainAdDuration % 60);
+                            if (totalSec < 10)
+                            {
+                                //不够十秒补零
+                                totalSec = `0${totalSec}`;
+                            }
+                            listTime = `${totalMin}:${totalSec}`
+
+                            return (
+                                <li className={randomIndex === index ? styles.playing : null} key={index}>
+                                    <div className={styles.row}>
+                                        <span>{data.name}</span>
+                                        <p>{data.artist}</p>
+                                    </div>
+                                    <span style={randomIndex === index ? { color: '#ff74a4' } : null} onClick={() => { clicked(index) }} ref={listTotalMusicTime} className={styles.audio_duration}  >{listTime}</span>
+                                    <audio id='listAudio' ref={getLiAudioRef} className={`${data.src}`} src={`./${data?.src}.mp3`}></audio>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+            </div >
+        </div>
     );
 };
 export default index

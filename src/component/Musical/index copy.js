@@ -62,8 +62,7 @@ const index = () =>
         progressAreaRef = useRef(),  // 获取进度条内容
         cutOverRef = useRef(),  // 切换按钮
         ulTagRef = useRef(),  // 暂时没用到 ~
-        // 因为要把 li 的ref给遍历出来 所以是个数
-        liAudioRef = useRef([]),  // 获取列表每一首歌的时间
+        liAudioRef = useRef(),  // 获取列表每一首歌的时间
         listTotalMusicTime = useRef()  // 列表总时间
 
     const [toggle, setToggle] = useState(1),  // 展示哪个切换按钮
@@ -264,7 +263,7 @@ const index = () =>
     {
         moreMusicBtn()
     }
-    // 这里目前是没有用到的 先留着吧
+
     const liAudioTag = () =>
     {
         const { current } = liAudioRef
@@ -351,11 +350,6 @@ const index = () =>
         ></PauseOutlined>
         return playback ? playBack : pause
     }
-    // 把所有的li的ref push进来 但好像会出现个问题 随着每次 state 更新 这个数组存的会越来越多 先记录下来 后面子看是什么问题
-    const getLiAudioRef = (listRef) =>
-    {
-        liAudioRef.current.push(listRef)
-    }
     return (
         <div className={styles.wrapper}>
             <div className={styles.img_area}>
@@ -396,29 +390,14 @@ const index = () =>
                     {/* {listDom()} */}
                     {allMusic.map((data, index) =>
                     {
-                        let listTime = null
-                        let current = liAudioRef?.current[index]
-                        console.log(current, 'currentcurrent');
-                        let mainAdDuration = current?.duration;
-                        console.log(mainAdDuration, 'mainAdDuration');
-                        let totalMin = Math.floor(mainAdDuration / 60);
-                        let totalSec = Math.floor(mainAdDuration % 60);
-                        if (totalSec < 10)
-                        {
-                            //不够十秒补零
-                            totalSec = `0${totalSec}`;
-                        }
-                        listTime = `${totalMin}:${totalSec}`
-
                         return (
                             <li className={randomIndex === index ? styles.playing : null} key={index}>
                                 <div className={styles.row}>
                                     <span>{data.name}</span>
                                     <p>{data.artist}</p>
                                 </div>
-                                {/* <span style={randomIndex === index ? { color: '#ff74a4' } : null} onClick={() => { clicked(index) }} ref={listTotalMusicTime} className={styles.audio_duration}  >{randomIndex === index ? '正在播放...' : '播放'}</span> */}
-                                <span style={randomIndex === index ? { color: '#ff74a4' } : null} onClick={() => { clicked(index) }} ref={listTotalMusicTime} className={styles.audio_duration}  >{listTime}</span>
-                                <audio id='listAudio' onLoadedData={liAudioTag} ref={getLiAudioRef} className={`${data.src}`} src={`./${data?.src}.mp3`}></audio>
+                                <span style={randomIndex === index ? { color: '#ff74a4' } : null} onClick={() => { clicked(index) }} ref={listTotalMusicTime} className={styles.audio_duration}  >{randomIndex === index ? '正在播放...' : '播放'}</span>
+                                <audio id='listAudio' onLoadedData={liAudioTag} ref={liAudioRef} className={`${data.src}`} src={`./${data?.src}.mp3`}></audio>
                             </li>
                         )
                     })}

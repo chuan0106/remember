@@ -11,28 +11,9 @@ export default defineConfig({
             path: '/main',
             component: '@/layouts/Common',
             routes: [
-                { path: '/main', name: '分类', component: '@/pages/Main' },
+                { path: '/main', name: '入口', component: '@/pages/Main' },
             ],
         },
-        {
-            exact: true,
-            path: '/lol',
-            component: '@/layouts/Common',
-            // 路由权限
-            wrappers: ['@/wrappers/auth',],
-            routes: [
-                { path: '/lol', name: '入口', component: '@/pages/LOL' },
-            ],
-        },
-        // {
-        //     exact: true,
-        //     path: '/lol',
-        //     name: '英雄联盟商店',
-        //     component: '@/layouts/LOL',
-        //     routes: [
-        //         { path: '/lol', name: '你的商店-英雄联盟官方网站-小川游戏', component: '@/pages/LOL' },
-        //     ],
-        // },
         {
             exact: true,
             path: '/login',
@@ -51,16 +32,47 @@ export default defineConfig({
         },
         {
             exact: true,
-            path: '/Toolbar',
+            path: '/lol',
+            component: '@/layouts/Common',
+            // 路由权限
+            // wrappers: ['@/wrappers/auth',],
             routes: [
-                { path: '/Toolbar', name: '分类', component: '@/component/Toolbar' },
+                { path: '/lol', name: '英雄联盟', component: '@/pages/LOL' },
+            ],
+        },
+        {
+            exact: true,
+            path: '/music',
+            component: '@/layouts/Login',
+            // wrappers: ['@/wrappers/auth',],
+            routes: [
+                { path: '/music', name: '音乐', component: '@/pages/Music' },
+            ],
+        },
+        {
+            exact: true,
+            path: '/secret',
+            component: '@/layouts/Login',
+            wrappers: ['@/wrappers/auth',],
+            routes: [
+                { path: '/secret', name: '秘密', component: '@/pages/Secret' },
             ],
         },
         // 404！
         {
             component: '@/pages/404',
-
         },
+        // {
+        //     exact: true,
+        //     path: '/lol',
+        //     name: '英雄联盟商店',
+        //     component: '@/layouts/LOL',
+        //     routes: [
+        //         { path: '/lol', name: '你的商店-英雄联盟官方网站-小川游戏', component: '@/pages/LOL' },
+        //     ],
+        // },
+
+
     ],
     // 修改icon
     // links: [
